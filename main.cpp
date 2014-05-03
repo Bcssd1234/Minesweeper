@@ -4,7 +4,10 @@
 
 int main (int argc, char* argv[])
 {
-  QApplicaion app (argc, argv);
+  QApplication app (argc, argv);
+
+  MS ms;
+  ms.show();
 
   return app.exec();
 }

@@ -22,4 +22,6 @@ class MSButton : public QPushButton
     Type t;
 
     void paintEvent (QPaintEvent* event);
-}
+};
+
+#endif

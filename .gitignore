@@ -19,3 +19,13 @@
 *.exe
 *.out
 *.app
+
+# Compiler Dependent
+*~
+
+# Minesweeper Dependent
+Makefile
+Minesweeper
+moc_ms.cpp
+moc_ms_board.cpp
+moc_ms_button.cpp

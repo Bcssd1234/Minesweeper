@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QLabel>
 
 #include "ms_board.h"
 
@@ -23,6 +24,9 @@ class MS : public QWidget
     MSBoard* board;
     QVBoxLayout* mainlayout;
     QHBoxLayout* hlayout;
+    QLabel* numMines;
+    QLabel* timer;
+    QPushButton* newgame;
 };
 
 #endif
