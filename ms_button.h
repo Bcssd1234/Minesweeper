@@ -11,6 +11,15 @@ class MSButton : public QPushButton
     MSButton (QWidget* parent);
     ~MSButton ();
 
-  private:
+    //Minesweeper specific stuff
+    enum Type { Blank, Pushed, Flag, Question };
+    Type type () const {return t;}
 
+    void setType (Type type) {t = type; repaint();}
+
+  private:
+    bool isMine;
+    Type t;
+
+    void paintEvent (QPaintEvent* event);
 }

@@ -5,6 +5,11 @@
 //MS contains a board, timer, and other features
 
 #include <QWidget>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
+#include "ms_board.h"
 
 class MS : public QWidget
 {
@@ -15,6 +20,9 @@ class MS : public QWidget
     ~MS();
 
   private:
+    MSBoard* board;
+    QVBoxLayout* mainlayout;
+    QHBoxLayout* hlayout;
 };
 
 #endif
