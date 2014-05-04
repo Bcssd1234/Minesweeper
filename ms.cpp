@@ -30,9 +30,17 @@ MS::MS (QWidget* parent) : QWidget (parent)
   hlayout->addWidget (timer);
 
   //Connect signals and slots
+  connect (newgame, SIGNAL(clicked()), this, SLOT(newGameClicked()));
 }
 
 MS::~MS()
 {
 
+}
+
+void MS::newGameClicked()
+{
+  //Reset Timer?
+
+  board->newGame ();
 }

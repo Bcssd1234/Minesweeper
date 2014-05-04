@@ -24,11 +24,10 @@ MSBoard::MSBoard (QWidget* parent) : QWidget (parent)
 
 MSBoard::~MSBoard ()
 {
-  /*
+  //delete all the buttons?
   delete buttons;
   delete msArray;
   delete grid;
-  */
 }
 
 void MSBoard::buttonLeftClicked ()
@@ -37,6 +36,29 @@ void MSBoard::buttonLeftClicked ()
 }
 
 void MSBoard::buttonRightClicked ()
+{
+
+}
+
+void MSBoard::newGame ()
+{
+  for (int i=0; i < height*width; ++i)
+    (*msArray)[i] = MSButton::Blank;
+
+  updateButtons ();
+}
+
+void MSBoard::updateButtons ()
+{
+  for (int i=0; i < height*width; ++i){
+    if (buttons->at(i)->type() != msArray->at(i) ){
+      buttons->at(i)->setType ((MSButton::Type)msArray->at(i) );
+    }
+    buttons->at(i)->setEnabled ((MSButton::Type)msArray->at(i) != MSButton::Pushed);
+  }
+}
+
+bool MSBoard::checkBoard ()
 {
 
 }

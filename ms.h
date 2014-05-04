@@ -20,6 +20,9 @@ class MS : public QWidget
     MS(QWidget* parent = 0);
     ~MS();
 
+  private slots:
+    void newGameClicked ();
+
   private:
     MSBoard* board;
     QVBoxLayout* mainlayout;

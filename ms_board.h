@@ -27,6 +27,7 @@ class MSBoard : public QWidget
 
   private:
     void updateButtons ();
+    bool checkBoard ();
 
     int height;
     int width;
