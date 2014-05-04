@@ -91,7 +91,7 @@ void MSBoard::newGame ()
   }
 
   updateButtons ();
-  assignBombs ();
+  assignMines ();
 }
 
 void MSBoard::updateButtons ()
@@ -111,7 +111,7 @@ int MSBoard::checkBoard ()
   //Return -1 if the game has been lost
 }
 
-void MSBoard::assignBombs ()
+void MSBoard::assignMines ()
 {
   //Assign 10 bombs by randomly choosing positions until 10 positions
   //without a bomb are found.  Increment i each time.

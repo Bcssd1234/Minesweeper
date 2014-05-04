@@ -20,13 +20,13 @@ class MSBoard : public QWidget
     MSBoard (QWidget* parent);
     ~MSBoard ();
     void newGame ();
-    void assignBombs ();
+    void assignMines ();
 
     //Defines possible outcomes
     enum State { Win, Lose };
 
   signals:
-    void finished (State s);
+    void finished (MSBoard::State s);
 
   private slots:
     void buttonLeftClicked ();

@@ -1,6 +1,10 @@
 #include <QPainter>
+#include <string>
+#include <sstream>
 
 #include "ms_button.h"
+
+using namespace std;
 
 MSButton::MSButton (QWidget* parent) : QPushButton (parent)
 {
@@ -23,19 +27,25 @@ void MSButton::paintEvent (QPaintEvent* event)
   QRect r = rect();
   
   if (t == Pushed){
-    //later change to the # of adjacent mines or a mine if it is one
-    p.drawText (r, Qt::AlignCenter, "P");
+    if (isMine == true)
+      p.drawText (r, Qt::AlignCenter, "M");
+    else{
+      stringstream ss;
+      string num;
+      ss << adjacentMines;
+      ss >> num;
+      p.drawText (r, Qt::AlignCenter, QString::fromStdString(num));
+    }
   }
 
   else if (t == Flag){
-    //later change to flag
+    //later change to actual flag
     p.drawText (r, Qt::AlignCenter, "F");
   }
 
   else if (t == Question){
     p.drawText (r, Qt::AlignCenter, "?");
-    
-
+  }
 }
 
 void MSButton::mousePressEvent (QMouseEvent* event)
