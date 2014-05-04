@@ -17,7 +17,9 @@ MS::MS (QWidget* parent) : QWidget (parent)
 
   //Initialization
   numMines->setFrameStyle (QFrame::WinPanel | QFrame::Sunken);
+  numMines->setAlignment (Qt::AlignCenter);
   timer->setFrameStyle (QFrame::WinPanel | QFrame::Sunken);
+  timer->setAlignment (Qt::AlignCenter);
 
   //Create layout
   mainlayout->addLayout (hlayout);

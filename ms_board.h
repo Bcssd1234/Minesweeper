@@ -3,12 +3,13 @@
 
 #include <QWidget>
 #include <QGridLayout>
+//#include <QVector>
 
 #include "ms_button.h"
 
 //These are template vectors that will be used to store
 //the buttons and the current state of the buttons.
-typedef QVector<MSButton*> MSButtonVec
+typedef QVector<MSButton*> MSButtonVec;
 typedef QVector<int> MSArray;
 
 class MSBoard : public QWidget
@@ -21,12 +22,14 @@ class MSBoard : public QWidget
     void newGame ();
 
   private slots:
-    buttonLeftClicked ();
-    buttonRightClicked ();
+    void buttonLeftClicked ();
+    void buttonRightClicked ();
 
   private:
     void updateButtons ();
 
+    int height;
+    int width;
     MSButtonVec* buttons;  //Stores the actual buttons
     MSArray* msArray;      //Stores the current state of the buttons
     QGridLayout* grid;
