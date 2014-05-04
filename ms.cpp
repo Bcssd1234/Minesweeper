@@ -2,6 +2,7 @@
 //MS contains a board, timer, and other features
 
 #include <QFrame>
+#include <QMessageBox>
 
 #include "ms.h"
 
@@ -36,7 +37,12 @@ MS::MS (QWidget* parent) : QWidget (parent)
 
 MS::~MS ()
 {
-
+  //delete board;
+  //delete mainlayout;
+  //delete hlayout;
+  //delete numMines;
+  //delete timer;
+  //delete newgame;
 }
 
 void MS::newGameClicked ()
@@ -46,5 +52,8 @@ void MS::newGameClicked ()
 
 void MS::gameOver (MSBoard::State s)
 {
-
+  if (s == MSBoard::Win)
+    QMessageBox::information (this, "Game Over", "You Win!");
+  else
+    QMessageBox::information (this, "Game Over", "You Lose!");
 }

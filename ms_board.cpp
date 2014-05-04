@@ -30,9 +30,9 @@ MSBoard::MSBoard (QWidget* parent) : QWidget (parent)
 MSBoard::~MSBoard ()
 {
   //delete all the buttons?
-  delete buttons;
-  delete msArray;
-  delete grid;
+  //delete buttons;
+  //delete msArray;
+  //delete grid;
 }
 
 void MSBoard::buttonLeftClicked ()
@@ -282,6 +282,7 @@ void MSBoard::gameWon ()
 	(buttons->at(i)->type() == MSButton::Question))
       (*msArray)[i] = MSButton::Flag;
   }
+  updateButtons ();
 }
 
 void MSBoard::gameLost ()
@@ -299,4 +300,5 @@ void MSBoard::gameLost ()
 	     (buttons->at(i)->type() == MSButton::Flag))
       (*msArray)[i] = MSButton::X;
   }
+  updateButtons ();
 }
