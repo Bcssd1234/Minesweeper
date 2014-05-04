@@ -1,6 +1,9 @@
 #include <cstdlib>
+#include <queue>
 
 #include "ms_board.h"
+
+using namespace std;
 
 MSBoard::MSBoard (QWidget* parent) : QWidget (parent)
 {
@@ -43,16 +46,107 @@ void MSBoard::buttonLeftClicked ()
   MSButton* b = buttons->at(i);
 
   if (b->type() == MSButton::Blank){
-    int s = 0;
-    (*msArray)[i] = MSButton::Pushed;
-    updateButtons ();
-    //s = checkBoard ();
-    if (s == 1){
-      emit finished (Win);
+    if ((b->isMine == true) || (b->adjacentMines != 0)){
+      int s = 0;
+      (*msArray)[i] = MSButton::Pushed;
+      updateButtons ();
+      //s = checkBoard ();
+      if (s == 1){
+	emit finished (Win);
+      }
+      else if (s == -1){
+	//Display all mines?
+	emit finished (Lose);
+      }
     }
-    else if (s == -1){
-      //Display all mines?
-      emit finished (Lose);
+
+    //If the chosen spot is not a mine and has 0 adjacent mines
+    //then all surroundnig spots must be pushed until
+    //buttons with > 0 adjacent mines are reached on all sides
+    else{
+      //Only buttons with 0 surrounding mines will be placed on the queue
+      queue<int> q;
+      q.push (i);
+      while (!q.empty()){
+	int cur = q.front();
+	q.pop();
+	(*msArray)[cur] = MSButton::Pushed;
+
+	//Check 3 touching button above the current location
+	if (cur/height > 0){
+	  //Button directly above must exist
+	  if ((*msArray)[cur-width] == MSButton::Blank){
+	    if (buttons->at(cur-width)->adjacentMines == 0)
+	      q.push (cur-width);
+	    else
+	      (*msArray)[cur-width] = MSButton::Pushed;
+	  }
+
+	  if (cur%width > 0){
+	    if ((*msArray)[cur-width-1] == MSButton::Blank){
+	      if (buttons->at(cur-width-1)->adjacentMines == 0)
+		q.push (cur-width-1);
+	      else
+		(*msArray)[cur-width-1] = MSButton::Pushed;
+	    }
+	  }
+	  if (cur%width < width-1){
+	    if ((*msArray)[cur-width+1] == MSButton::Blank){
+	      if (buttons->at(cur-width+1)->adjacentMines == 0)
+		q.push (cur-width+1);
+	      else
+		(*msArray)[cur-width+1] = MSButton::Pushed;
+	    }
+	  }
+	}
+
+	//Check 3 touching button below the current location
+	if (cur/height < height-1){
+	  //Button directly below must exist
+	  if ((*msArray)[cur+width] == MSButton::Blank){
+	    if (buttons->at(cur+width)->adjacentMines == 0)
+	      q.push (cur+width);
+	    else
+	      (*msArray)[cur+width] = MSButton::Pushed;
+	  }
+
+	  if (cur%width > 0){
+	    if ((*msArray)[cur+width-1] == MSButton::Blank){
+	      if (buttons->at(cur+width-1)->adjacentMines == 0)
+		q.push (cur+width-1);
+	      else
+		(*msArray)[cur+width-1] = MSButton::Pushed;
+	    }
+	  }
+	  if (cur%width < width-1){
+	    if ((*msArray)[cur+width+1] == MSButton::Blank){
+	      if (buttons->at(cur+width+1)->adjacentMines == 0)
+		q.push (cur+width+1);
+	      else
+		(*msArray)[cur+width+1] = MSButton::Pushed;
+	    }
+	  }
+	}
+
+	//Check left and right
+	if (cur%width > 0){
+	  if ((*msArray)[cur-1] == MSButton::Blank){
+	    if (buttons->at(cur-1)->adjacentMines == 0)
+	      q.push (cur-1);
+	    else
+	      (*msArray)[cur-1] = MSButton::Pushed;
+	  }
+	}
+	if (cur%width < width-1){
+	  if ((*msArray)[cur+1] == MSButton::Blank){
+	    if (buttons->at(cur+1)->adjacentMines == 0)
+	      q.push (cur+1);
+	    else
+	      (*msArray)[cur+1] = MSButton::Pushed;
+	  }
+	}
+      }
+      updateButtons ();
     }
   }
 }
@@ -70,10 +164,12 @@ void MSBoard::buttonRightClicked ()
   if (b->type() == MSButton::Blank){
     (*msArray)[i] = MSButton::Flag;
     updateButtons ();
+    //Decrement remaining mine count
   }
   else if (b->type() == MSButton::Flag){
     (*msArray)[i] = MSButton::Question;
     updateButtons ();
+    //Increment remaining mine count
   }
 
   else if (b->type() == MSButton::Question){
@@ -124,7 +220,7 @@ void MSBoard::assignMines ()
     }
   }
 
-  //Assign the adjacent bomb count to each button
+  //Assign the adjacentMine count to each button
   for (i = 0; i < height*width; ++i){
     if (buttons->at(i)->isMine == true){
       //Check 3 touching buttons above current button

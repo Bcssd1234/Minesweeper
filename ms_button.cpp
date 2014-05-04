@@ -29,7 +29,7 @@ void MSButton::paintEvent (QPaintEvent* event)
   if (t == Pushed){
     if (isMine == true)
       p.drawText (r, Qt::AlignCenter, "M");
-    else{
+    else if (adjacentMines != 0){
       stringstream ss;
       string num;
       ss << adjacentMines;

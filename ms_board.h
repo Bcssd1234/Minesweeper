@@ -8,7 +8,7 @@
 #include "ms_button.h"
 
 //These are template vectors that will be used to store
-//the buttons and the current state of the buttons.
+//the actual buttons and the new state of the buttons.
 typedef QVector<MSButton*> MSButtonVec;
 typedef QVector<int> MSArray;
 
