@@ -22,7 +22,7 @@ class MSButton : public QPushButton
     QSize minimumSizeHint() const { return QSize( 10, 10 ); }
 
     //Minesweeper specific stuff
-    enum Type { Blank, Pushed, Flag, Question };
+    enum Type { Blank, Pushed, Flag, Question, X };
     Type type () const {return t;}
     
     //repaint() triggers a paintEvent

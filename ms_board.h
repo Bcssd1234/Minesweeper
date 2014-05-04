@@ -35,6 +35,8 @@ class MSBoard : public QWidget
   private:
     void updateButtons ();
     int checkBoard ();
+    void gameLost ();
+    void gameWon ();
 
     int height;
     int width;

@@ -50,12 +50,13 @@ void MSBoard::buttonLeftClicked ()
       int s = 0;
       (*msArray)[i] = MSButton::Pushed;
       updateButtons ();
-      //s = checkBoard ();
+      s = checkBoard ();
       if (s == 1){
+	gameWon ();
 	emit finished (Win);
       }
       else if (s == -1){
-	//Display all mines?
+	gameLost ();
 	emit finished (Lose);
       }
     }
@@ -202,9 +203,26 @@ void MSBoard::updateButtons ()
 
 int MSBoard::checkBoard ()
 {
-  //Return 0 if the game should continue
+  //Return 0 if the game should continue playing
   //Return 1 if the game has been won
   //Return -1 if the game has been lost
+
+  //Assume won until either
+  // a mine has been pushed (lost) or
+  // a spot without a mine has not been pushed yet (continue playing)
+  int state = 1;
+
+  for (int i=0; i < height*width; ++i){
+    if ((buttons->at(i)->type() == MSButton::Pushed) &&
+	(buttons->at(i)->isMine == true)){
+      state = -1;
+      break;
+    }
+    else if ((buttons->at(i)->type() != MSButton::Pushed) &&
+	     (buttons->at(i)->isMine == false))
+      state = 0;
+  }
+  return state;
 }
 
 void MSBoard::assignMines ()
@@ -251,5 +269,34 @@ void MSBoard::assignMines ()
       if (i%width < width-1)
 	buttons->at(i+1)->adjacentMines += 1;
     }
+  }
+}
+
+void MSBoard::gameWon ()
+{
+  //Show flags on unflagged mines
+  for (int i=0; i < height*width; ++i){
+    //Unenable all buttons
+    buttons->at(i)->setEnabled (false);
+    if ((buttons->at(i)->type() == MSButton::Blank) || 
+	(buttons->at(i)->type() == MSButton::Question))
+      (*msArray)[i] = MSButton::Flag;
+  }
+}
+
+void MSBoard::gameLost ()
+{
+  //Show all mines that are not flagged
+  //Show X on wrongly placed flags
+  for (int i=0; i < height*width; ++i){
+    //Unenable all buttons
+    buttons->at(i)->setEnabled (false);
+    if ((buttons->at(i)->isMine == true) &&
+	(buttons->at(i)->type() != MSButton::Flag))
+      (*msArray)[i] = MSButton::Pushed;
+
+    else if ((buttons->at(i)->isMine == false) &&
+	     (buttons->at(i)->type() == MSButton::Flag))
+      (*msArray)[i] = MSButton::X;
   }
 }

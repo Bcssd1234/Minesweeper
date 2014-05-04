@@ -46,6 +46,13 @@ void MSButton::paintEvent (QPaintEvent* event)
   else if (t == Question){
     p.drawText (r, Qt::AlignCenter, "?");
   }
+
+  else if (t == X){
+    p.setPen (Qt::SolidLine);
+    //p.setBrush (Qt::red);
+    p.drawLine (r.topLeft() + QPoint(4,4), r.bottomRight() - QPoint(4,4));
+    p.drawLine (r.bottomLeft() + QPoint(4,-4), r.topRight() - QPoint(4,-4));
+  }
 }
 
 void MSButton::mousePressEvent (QMouseEvent* event)
