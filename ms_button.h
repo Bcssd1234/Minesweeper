@@ -39,7 +39,8 @@ class MSButton : public QPushButton
     bool isMine;
     Type t;
 
-    //void paintEvent (QPaintEvent* event);
+    void paintEvent (QPaintEvent* event);
+    void mouseReleaseEvent (QMouseEvent* event);
 };
     
 #endif

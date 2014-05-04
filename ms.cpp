@@ -31,16 +31,22 @@ MS::MS (QWidget* parent) : QWidget (parent)
 
   //Connect signals and slots
   connect (newgame, SIGNAL(clicked()), this, SLOT(newGameClicked()));
+  connect (board, SIGNAL(finished(MSBoard::State)), this, SLOT(gameOver(MSBoard::State)));
 }
 
-MS::~MS()
+MS::~MS ()
 {
 
 }
 
-void MS::newGameClicked()
+void MS::newGameClicked ()
 {
   //Reset Timer?
 
   board->newGame ();
+}
+
+void MS::gameOver (MSBoard::State s)
+{
+
 }

@@ -22,6 +22,7 @@ class MS : public QWidget
 
   private slots:
     void newGameClicked ();
+    void gameOver (MSBoard::State s);
 
   private:
     MSBoard* board;

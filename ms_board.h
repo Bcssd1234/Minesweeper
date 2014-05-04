@@ -21,13 +21,19 @@ class MSBoard : public QWidget
     ~MSBoard ();
     void newGame ();
 
+    //Defines possible outcomes
+    enum State { Win, Lose };
+
+  signals:
+    void finished (State s);
+
   private slots:
     void buttonLeftClicked ();
     void buttonRightClicked ();
 
   private:
     void updateButtons ();
-    bool checkBoard ();
+    int checkBoard ();
 
     int height;
     int width;

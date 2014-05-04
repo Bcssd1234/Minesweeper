@@ -12,7 +12,7 @@ MSButton::~MSButton ()
 {
 
 }
-/*
+
 void MSButton::paintEvent (QPaintEvent* event)
 {
   QPushButton::paintEvent (event);
@@ -21,11 +21,7 @@ void MSButton::paintEvent (QPaintEvent* event)
 
   QRect r = rect();
 
-  if (t == Blank){
-    p.eraseRect (r);
-  }
-
-  else if (t == Pushed){
+  if (t == Pushed){
     //later change to the # of adjacent Mines
     p.drawText (r, Qt::AlignCenter, "P");
   }
@@ -39,7 +35,7 @@ void MSButton::paintEvent (QPaintEvent* event)
     p.drawText (r, Qt::AlignCenter, "?");
     }
 }
-*/
+
 void MSButton::mousePressEvent (QMouseEvent* event)
 {
   setDown (true);
@@ -50,3 +46,10 @@ void MSButton::mousePressEvent (QMouseEvent* event)
     emit leftClicked();
 }
 
+void MSButton::mouseReleaseEvent (QMouseEvent* event)
+{
+  //For some reason, right-clicked buttons stay down until another button is
+  //clicked, so I have to set each button back up here
+  if (type() != Pushed)
+    setDown (false);
+}
