@@ -27,8 +27,10 @@ void MSButton::paintEvent (QPaintEvent* event)
   QRect r = rect();
   
   if (t == Pushed){
-    if (isMine == true)
-      p.drawText (r, Qt::AlignCenter, "M");
+    if (isMine == true){
+      QImage image ("48x48_mine.png");
+      p.drawImage (r, image);
+    }
     else if (adjacentMines != 0){
       stringstream ss;
       string num;
@@ -39,8 +41,8 @@ void MSButton::paintEvent (QPaintEvent* event)
   }
 
   else if (t == Flag){
-    //later change to actual flag
-    p.drawText (r, Qt::AlignCenter, "F");
+    QImage image ("48x48_flag.png");
+    p.drawImage (r, image);
   }
 
   else if (t == Question){
@@ -49,7 +51,7 @@ void MSButton::paintEvent (QPaintEvent* event)
 
   else if (t == X){
     p.setPen (Qt::SolidLine);
-    //p.setBrush (Qt::red);
+    p.setPen (Qt::red);
     p.drawLine (r.topLeft() + QPoint(4,4), r.bottomRight() - QPoint(4,4));
     p.drawLine (r.bottomLeft() + QPoint(4,-4), r.topRight() - QPoint(4,-4));
   }

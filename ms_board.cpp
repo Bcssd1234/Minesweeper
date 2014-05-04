@@ -291,7 +291,7 @@ void MSBoard::gameLost ()
   //Show X on wrongly placed flags
   for (int i=0; i < height*width; ++i){
     //Unenable all buttons
-    buttons->at(i)->setEnabled (false);
+    //buttons->at(i)->setEnabled (false);
     if ((buttons->at(i)->isMine == true) &&
 	(buttons->at(i)->type() != MSButton::Flag))
       (*msArray)[i] = MSButton::Pushed;
