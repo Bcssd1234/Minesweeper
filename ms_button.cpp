@@ -12,7 +12,7 @@ MSButton::~MSButton ()
 {
 
 }
-
+/*
 void MSButton::paintEvent (QPaintEvent* event)
 {
   QPushButton::paintEvent (event);
@@ -37,11 +37,16 @@ void MSButton::paintEvent (QPaintEvent* event)
 
   else if (t == Question){
     p.drawText (r, Qt::AlignCenter, "?");
-  }
+    }
 }
-
+*/
 void MSButton::mousePressEvent (QMouseEvent* event)
 {
+  setDown (true);
+
   if (event->button() == Qt::RightButton)
     emit rightClicked();
+  else
+    emit leftClicked();
 }
+
