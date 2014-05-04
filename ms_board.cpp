@@ -1,7 +1,6 @@
-#include "ms_board.h"
+#include <cstdlib>
 
-#include <iostream>
-using namespace std;
+#include "ms_board.h"
 
 MSBoard::MSBoard (QWidget* parent) : QWidget (parent)
 {
@@ -20,6 +19,9 @@ MSBoard::MSBoard (QWidget* parent) : QWidget (parent)
     buttons->insert (i, msb);
     (*msArray)[i] = MSButton::Blank;
   }
+
+  srand(time(0));
+  newGame();
 }
 
 MSBoard::~MSBoard ()
@@ -82,10 +84,14 @@ void MSBoard::buttonRightClicked ()
 
 void MSBoard::newGame ()
 {
-  for (int i=0; i < height*width; ++i)
+  for (int i=0; i < height*width; ++i){
     (*msArray)[i] = MSButton::Blank;
+    buttons->at(i)->isMine = false;
+    buttons->at(i)->adjacentMines = 0;
+  }
 
   updateButtons ();
+  assignBombs ();
 }
 
 void MSBoard::updateButtons ()
@@ -103,4 +109,51 @@ int MSBoard::checkBoard ()
   //Return 0 if the game should continue
   //Return 1 if the game has been won
   //Return -1 if the game has been lost
+}
+
+void MSBoard::assignBombs ()
+{
+  //Assign 10 bombs by randomly choosing positions until 10 positions
+  //without a bomb are found.  Increment i each time.
+  int i = 0;
+  while (i < 10){
+    int r = rand() % (height*width);
+    if (buttons->at(r)->isMine == false){
+      buttons->at(r)->isMine = true;
+      ++i;
+    }
+  }
+
+  //Assign the adjacent bomb count to each button
+  for (i = 0; i < height*width; ++i){
+    if (buttons->at(i)->isMine == true){
+      //Check 3 touching buttons above current button
+      if (i/height > 0){
+	//Button directly above must exist
+	buttons->at(i-width)->adjacentMines += 1;
+
+	if (i%width > 0)
+	  buttons->at(i-width-1)->adjacentMines += 1;
+	if (i%width < width-1)
+	  buttons->at(i-width+1)->adjacentMines += 1;
+      }
+
+      //Check 3 touching buttons below current button
+      if (i/height < height-1){
+	//Button directly below must exist
+	buttons->at(i+width)->adjacentMines += 1;
+
+	if (i%width > 0)
+	  buttons->at(i+width-1)->adjacentMines += 1;
+	if (i%width < width-1)
+	  buttons->at(i+width+1)->adjacentMines += 1;
+      }
+
+      //Check left and right
+      if (i%width > 0)
+	buttons->at(i-1)->adjacentMines += 1;
+      if (i%width < width-1)
+	buttons->at(i+1)->adjacentMines += 1;
+    }
+  }
 }

@@ -6,6 +6,7 @@ MSButton::MSButton (QWidget* parent) : QPushButton (parent)
 {
   t = Blank;
   isMine = false;
+  adjacentMines = 0;
 }
 
 MSButton::~MSButton ()
@@ -20,9 +21,9 @@ void MSButton::paintEvent (QPaintEvent* event)
   QPainter p (this);
 
   QRect r = rect();
-
+  
   if (t == Pushed){
-    //later change to the # of adjacent Mines
+    //later change to the # of adjacent mines or a mine if it is one
     p.drawText (r, Qt::AlignCenter, "P");
   }
 
@@ -33,7 +34,8 @@ void MSButton::paintEvent (QPaintEvent* event)
 
   else if (t == Question){
     p.drawText (r, Qt::AlignCenter, "?");
-    }
+    
+
 }
 
 void MSButton::mousePressEvent (QMouseEvent* event)

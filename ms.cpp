@@ -41,8 +41,6 @@ MS::~MS ()
 
 void MS::newGameClicked ()
 {
-  //Reset Timer?
-
   board->newGame ();
 }
 

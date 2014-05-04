@@ -20,6 +20,7 @@ class MSBoard : public QWidget
     MSBoard (QWidget* parent);
     ~MSBoard ();
     void newGame ();
+    void assignBombs ();
 
     //Defines possible outcomes
     enum State { Win, Lose };

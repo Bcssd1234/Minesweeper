@@ -11,6 +11,9 @@ class MSButton : public QPushButton
   public:
     MSButton (QWidget* parent);
     ~MSButton ();
+
+    bool isMine;
+    int adjacentMines;
     
     //Override functions related to the size of the button
     QSizePolicy sizePolicy() const
@@ -36,7 +39,6 @@ class MSButton : public QPushButton
     void mousePressEvent (QMouseEvent* event);
     
   private:
-    bool isMine;
     Type t;
 
     void paintEvent (QPaintEvent* event);
