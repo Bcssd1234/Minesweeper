@@ -39,3 +39,9 @@ void MSButton::paintEvent (QPaintEvent* event)
     p.drawText (r, Qt::AlignCenter, "?");
   }
 }
+
+void MSButton::mousePressEvent (QMouseEvent* event)
+{
+  if (event->button() == Qt::RightButton)
+    emit rightClicked();
+}
