@@ -23,6 +23,7 @@ class MS : public QWidget
   private slots:
     void newGameClicked ();
     void gameOver (MSBoard::State s);
+    void changeRemainingMines (int change);
 
   private:
     MSBoard* board;
@@ -31,6 +32,8 @@ class MS : public QWidget
     QLabel* numMines;
     QLabel* timer;
     QPushButton* newgame;
+
+    int remainingMines;
 };
 
 #endif

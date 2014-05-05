@@ -166,11 +166,13 @@ void MSBoard::buttonRightClicked ()
     (*msArray)[i] = MSButton::Flag;
     updateButtons ();
     //Decrement remaining mine count
+    emit flagsChanged (-1);
   }
   else if (b->type() == MSButton::Flag){
     (*msArray)[i] = MSButton::Question;
     updateButtons ();
     //Increment remaining mine count
+    emit flagsChanged (1);
   }
 
   else if (b->type() == MSButton::Question){
@@ -277,7 +279,7 @@ void MSBoard::gameWon ()
   //Show flags on unflagged mines
   for (int i=0; i < height*width; ++i){
     //Unenable all buttons
-    buttons->at(i)->setEnabled (false);
+    //buttons->at(i)->setEnabled (false);
     if ((buttons->at(i)->type() == MSButton::Blank) || 
 	(buttons->at(i)->type() == MSButton::Question))
       (*msArray)[i] = MSButton::Flag;

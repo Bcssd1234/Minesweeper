@@ -27,6 +27,7 @@ class MSBoard : public QWidget
 
   signals:
     void finished (MSBoard::State s);
+    void flagsChanged (int change);
 
   private slots:
     void buttonLeftClicked ();
