@@ -10,6 +10,7 @@ MSBoard::MSBoard (QWidget* parent) : QWidget (parent)
   height = 10;
   width = 10;
   gameIsOver = false;
+  timerIsActive = false;
 
   buttons = new MSButtonVec (height*width);
   msArray = new MSArray (height*width);
@@ -38,6 +39,11 @@ MSBoard::~MSBoard ()
 
 void MSBoard::buttonLeftClicked ()
 {
+  if (!timerIsActive){
+    timerIsActive = true;
+    emit beginTimer ();
+  }
+
   if (!gameIsOver){
     //find the button that was clicked
     int i;
@@ -157,6 +163,11 @@ void MSBoard::buttonLeftClicked ()
 
 void MSBoard::buttonRightClicked ()
 {
+  if (!timerIsActive){
+    timerIsActive = true;
+    emit beginTimer ();
+  }
+
   if (!gameIsOver){
     //find the button that was clicked
     int i;

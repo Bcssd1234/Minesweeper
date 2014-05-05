@@ -22,12 +22,15 @@ class MSBoard : public QWidget
     void newGame ();
     void assignMines ();
 
+    bool timerIsActive;
+
     //Defines possible outcomes
     enum State { Win, Lose };
 
   signals:
     void finished (MSBoard::State s);
     void flagsChanged (int change);
+    void beginTimer ();
 
   private slots:
     void buttonLeftClicked ();
@@ -41,9 +44,9 @@ class MSBoard : public QWidget
     //gameIsOver is used to prevent the board from being changed
     //by clicking buttons once the game is over
     bool gameIsOver;
-
     int height;
     int width;
+
     MSButtonVec* buttons;  //Stores the actual buttons
     MSArray* msArray;      //Stores the current state of the buttons
     QGridLayout* grid;

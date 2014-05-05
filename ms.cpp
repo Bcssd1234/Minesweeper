@@ -19,8 +19,9 @@ MS::MS (QWidget* parent) : QWidget (parent)
   board = new MSBoard (this);
   mainlayout = new QVBoxLayout (this);
   hlayout = new QHBoxLayout;
-  timer = new QLabel ("Time Taken");
+  time = new QLabel ("0");
   newgame = new QPushButton ("New Game");
+  timer = new QTimer (this);
   string s;
   stringstream ss;
   ss << remainingMines;
@@ -30,8 +31,10 @@ MS::MS (QWidget* parent) : QWidget (parent)
   //Initialization
   numMines->setFrameStyle (QFrame::WinPanel | QFrame::Sunken);
   numMines->setAlignment (Qt::AlignCenter);
-  timer->setFrameStyle (QFrame::WinPanel | QFrame::Sunken);
-  timer->setAlignment (Qt::AlignCenter);
+  time->setFrameStyle (QFrame::WinPanel | QFrame::Sunken);
+  time->setAlignment (Qt::AlignCenter);
+  curTime = 0;
+  timer->setInterval (1000);
 
   //Create layout
   mainlayout->addLayout (hlayout);
@@ -39,7 +42,7 @@ MS::MS (QWidget* parent) : QWidget (parent)
 
   hlayout->addWidget (numMines);
   hlayout->addWidget (newgame);
-  hlayout->addWidget (timer);
+  hlayout->addWidget (time);
 
   //Connect signals and slots
   connect (newgame,     SIGNAL(clicked()), 
@@ -48,6 +51,10 @@ MS::MS (QWidget* parent) : QWidget (parent)
 	   this,        SLOT(gameOver(MSBoard::State)));
   connect (board,       SIGNAL(flagsChanged(int)), 
 	   this,        SLOT(changeRemainingMines(int)));
+  connect (board,       SIGNAL(beginTimer()),
+	   this,        SLOT(startTimer()));
+  connect (timer,       SIGNAL(timeout()),
+	   this,        SLOT(updateTime()));
 }
 
 MS::~MS ()
@@ -65,12 +72,28 @@ void MS::newGameClicked ()
   board->newGame ();
   remainingMines = 10;
   numMines->setText ("10");
+  curTime = 0;
+  time->setText ("0");
 }
 
 void MS::gameOver (MSBoard::State s)
 {
-  if (s == MSBoard::Win)
-    QMessageBox::information (this, "Game Over", "You Win!");
+  timer->stop();
+  board->timerIsActive = false;
+
+  if (s == MSBoard::Win){
+    QMessageBox information (this);
+    information.setWindowTitle ("Game Over");
+    information.setText ("You Win!");
+    information.setIcon (QMessageBox::Information);
+    string s;
+    stringstream ss;
+    ss << "Time: ";
+    ss << curTime;
+    s = ss.str();
+    information.setInformativeText (QString::fromStdString(s));
+    information.exec ();
+  }
   else
     QMessageBox::information (this, "Game Over", "You Lose!");
 }
@@ -83,4 +106,19 @@ void MS::changeRemainingMines (int change)
   ss << remainingMines;
   ss >> s;
   numMines->setText (QString::fromStdString(s));
+}
+
+void MS::startTimer ()
+{
+  timer->start();
+}
+
+void MS::updateTime ()
+{
+  ++curTime;
+  string s;
+  stringstream ss;
+  ss << curTime;
+  ss >> s;
+  time->setText (QString::fromStdString(s));
 }
