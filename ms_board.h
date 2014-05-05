@@ -38,6 +38,9 @@ class MSBoard : public QWidget
     int checkBoard ();
     void gameLost ();
     void gameWon ();
+    //gameIsOver is used to prevent the board from being changed
+    //by clicking buttons once the game is over
+    bool gameIsOver;
 
     int height;
     int width;

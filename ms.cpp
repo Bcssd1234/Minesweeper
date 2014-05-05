@@ -63,6 +63,8 @@ MS::~MS ()
 void MS::newGameClicked ()
 {
   board->newGame ();
+  remainingMines = 10;
+  numMines->setText ("10");
 }
 
 void MS::gameOver (MSBoard::State s)

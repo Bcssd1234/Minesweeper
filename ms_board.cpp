@@ -9,6 +9,7 @@ MSBoard::MSBoard (QWidget* parent) : QWidget (parent)
 {
   height = 10;
   width = 10;
+  gameIsOver = false;
 
   buttons = new MSButtonVec (height*width);
   msArray = new MSArray (height*width);
@@ -37,147 +38,151 @@ MSBoard::~MSBoard ()
 
 void MSBoard::buttonLeftClicked ()
 {
-  //find the button that was clicked
-  int i;
-  for (i=0; i < buttons->size(); ++i){
-    if (buttons->at(i) == (MSButton*)sender())
-      break;
-  }
-  MSButton* b = buttons->at(i);
-
-  if (b->type() == MSButton::Blank){
-    if ((b->isMine == true) || (b->adjacentMines != 0)){
-      int s = 0;
-      (*msArray)[i] = MSButton::Pushed;
-      updateButtons ();
-      s = checkBoard ();
-      if (s == 1){
-	gameWon ();
-	emit finished (Win);
-      }
-      else if (s == -1){
-	gameLost ();
-	emit finished (Lose);
-      }
+  if (!gameIsOver){
+    //find the button that was clicked
+    int i;
+    for (i=0; i < buttons->size(); ++i){
+      if (buttons->at(i) == (MSButton*)sender())
+	break;
     }
+    MSButton* b = buttons->at(i);
 
-    //If the chosen spot is not a mine and has 0 adjacent mines
-    //then all surroundnig spots must be pushed until
-    //buttons with > 0 adjacent mines are reached on all sides
-    else{
-      //Only buttons with 0 surrounding mines will be placed on the queue
-      queue<int> q;
-      q.push (i);
-      while (!q.empty()){
-	int cur = q.front();
-	q.pop();
-	(*msArray)[cur] = MSButton::Pushed;
-
-	//Check 3 touching button above the current location
-	if (cur/height > 0){
-	  //Button directly above must exist
-	  if ((*msArray)[cur-width] == MSButton::Blank){
-	    if (buttons->at(cur-width)->adjacentMines == 0)
-	      q.push (cur-width);
-	    else
-	      (*msArray)[cur-width] = MSButton::Pushed;
-	  }
-
-	  if (cur%width > 0){
-	    if ((*msArray)[cur-width-1] == MSButton::Blank){
-	      if (buttons->at(cur-width-1)->adjacentMines == 0)
-		q.push (cur-width-1);
-	      else
-		(*msArray)[cur-width-1] = MSButton::Pushed;
-	    }
-	  }
-	  if (cur%width < width-1){
-	    if ((*msArray)[cur-width+1] == MSButton::Blank){
-	      if (buttons->at(cur-width+1)->adjacentMines == 0)
-		q.push (cur-width+1);
-	      else
-		(*msArray)[cur-width+1] = MSButton::Pushed;
-	    }
-	  }
+    if (b->type() == MSButton::Blank){
+      if ((b->isMine == true) || (b->adjacentMines != 0)){
+	int s = 0;
+	(*msArray)[i] = MSButton::Pushed;
+	updateButtons ();
+	s = checkBoard ();
+	if (s == 1){
+	  gameWon ();
+	  emit finished (Win);
 	}
-
-	//Check 3 touching button below the current location
-	if (cur/height < height-1){
-	  //Button directly below must exist
-	  if ((*msArray)[cur+width] == MSButton::Blank){
-	    if (buttons->at(cur+width)->adjacentMines == 0)
-	      q.push (cur+width);
-	    else
-	      (*msArray)[cur+width] = MSButton::Pushed;
-	  }
-
-	  if (cur%width > 0){
-	    if ((*msArray)[cur+width-1] == MSButton::Blank){
-	      if (buttons->at(cur+width-1)->adjacentMines == 0)
-		q.push (cur+width-1);
-	      else
-		(*msArray)[cur+width-1] = MSButton::Pushed;
-	    }
-	  }
-	  if (cur%width < width-1){
-	    if ((*msArray)[cur+width+1] == MSButton::Blank){
-	      if (buttons->at(cur+width+1)->adjacentMines == 0)
-		q.push (cur+width+1);
-	      else
-		(*msArray)[cur+width+1] = MSButton::Pushed;
-	    }
-	  }
-	}
-
-	//Check left and right
-	if (cur%width > 0){
-	  if ((*msArray)[cur-1] == MSButton::Blank){
-	    if (buttons->at(cur-1)->adjacentMines == 0)
-	      q.push (cur-1);
-	    else
-	      (*msArray)[cur-1] = MSButton::Pushed;
-	  }
-	}
-	if (cur%width < width-1){
-	  if ((*msArray)[cur+1] == MSButton::Blank){
-	    if (buttons->at(cur+1)->adjacentMines == 0)
-	      q.push (cur+1);
-	    else
-	      (*msArray)[cur+1] = MSButton::Pushed;
-	  }
+	else if (s == -1){
+	  gameLost ();
+	  emit finished (Lose);
 	}
       }
-      updateButtons ();
+
+      //If the chosen spot is not a mine and has 0 adjacent mines
+      //then all surroundnig spots must be pushed until
+      //buttons with > 0 adjacent mines are reached on all sides
+      else{
+	//Only buttons with 0 surrounding mines will be placed on the queue
+	queue<int> q;
+	q.push (i);
+	while (!q.empty()){
+	  int cur = q.front();
+	  q.pop();
+	  (*msArray)[cur] = MSButton::Pushed;
+
+	  //Check 3 touching button above the current location
+	  if (cur/height > 0){
+	    //Button directly above must exist
+	    if ((*msArray)[cur-width] == MSButton::Blank){
+	      if (buttons->at(cur-width)->adjacentMines == 0)
+		q.push (cur-width);
+	      else
+		(*msArray)[cur-width] = MSButton::Pushed;
+	    }
+
+	    if (cur%width > 0){
+	      if ((*msArray)[cur-width-1] == MSButton::Blank){
+		if (buttons->at(cur-width-1)->adjacentMines == 0)
+		  q.push (cur-width-1);
+		else
+		  (*msArray)[cur-width-1] = MSButton::Pushed;
+	      }
+	    }
+	    if (cur%width < width-1){
+	      if ((*msArray)[cur-width+1] == MSButton::Blank){
+		if (buttons->at(cur-width+1)->adjacentMines == 0)
+		  q.push (cur-width+1);
+		else
+		  (*msArray)[cur-width+1] = MSButton::Pushed;
+	      }
+	    }
+	  }
+
+	  //Check 3 touching button below the current location
+	  if (cur/height < height-1){
+	    //Button directly below must exist
+	    if ((*msArray)[cur+width] == MSButton::Blank){
+	      if (buttons->at(cur+width)->adjacentMines == 0)
+		q.push (cur+width);
+	      else
+		(*msArray)[cur+width] = MSButton::Pushed;
+	    }
+
+	    if (cur%width > 0){
+	      if ((*msArray)[cur+width-1] == MSButton::Blank){
+		if (buttons->at(cur+width-1)->adjacentMines == 0)
+		  q.push (cur+width-1);
+		else
+		  (*msArray)[cur+width-1] = MSButton::Pushed;
+	      }
+	    }
+	    if (cur%width < width-1){
+	      if ((*msArray)[cur+width+1] == MSButton::Blank){
+		if (buttons->at(cur+width+1)->adjacentMines == 0)
+		  q.push (cur+width+1);
+		else
+		  (*msArray)[cur+width+1] = MSButton::Pushed;
+	      }
+	    }
+	  }
+
+	  //Check left and right
+	  if (cur%width > 0){
+	    if ((*msArray)[cur-1] == MSButton::Blank){
+	      if (buttons->at(cur-1)->adjacentMines == 0)
+		q.push (cur-1);
+	      else
+		(*msArray)[cur-1] = MSButton::Pushed;
+	    }
+	  }
+	  if (cur%width < width-1){
+	    if ((*msArray)[cur+1] == MSButton::Blank){
+	      if (buttons->at(cur+1)->adjacentMines == 0)
+		q.push (cur+1);
+	      else
+		(*msArray)[cur+1] = MSButton::Pushed;
+	    }
+	  }
+	}
+	updateButtons ();
+      }
     }
   }
 }
 
 void MSBoard::buttonRightClicked ()
 {
-  //find the button that was clicked
-  int i;
-  for (i=0; i < buttons->size(); ++i){
-    if (buttons->at(i) == (MSButton*)sender())
-      break;
-  }
-  MSButton* b = buttons->at(i);
+  if (!gameIsOver){
+    //find the button that was clicked
+    int i;
+    for (i=0; i < buttons->size(); ++i){
+      if (buttons->at(i) == (MSButton*)sender())
+	break;
+    }
+    MSButton* b = buttons->at(i);
 
-  if (b->type() == MSButton::Blank){
-    (*msArray)[i] = MSButton::Flag;
-    updateButtons ();
-    //Decrement remaining mine count
-    emit flagsChanged (-1);
-  }
-  else if (b->type() == MSButton::Flag){
-    (*msArray)[i] = MSButton::Question;
-    updateButtons ();
-    //Increment remaining mine count
-    emit flagsChanged (1);
-  }
+    if (b->type() == MSButton::Blank){
+      (*msArray)[i] = MSButton::Flag;
+      updateButtons ();
+      //Decrement remaining mine count
+      emit flagsChanged (-1);
+    }
+    else if (b->type() == MSButton::Flag){
+      (*msArray)[i] = MSButton::Question;
+      updateButtons ();
+      //Increment remaining mine count
+      emit flagsChanged (1);
+    }
 
-  else if (b->type() == MSButton::Question){
-    (*msArray)[i] = MSButton::Blank;
-    updateButtons ();
+    else if (b->type() == MSButton::Question){
+      (*msArray)[i] = MSButton::Blank;
+      updateButtons ();
+    }
   }
 }
 
@@ -191,6 +196,7 @@ void MSBoard::newGame ()
 
   updateButtons ();
   assignMines ();
+  gameIsOver = false;
 }
 
 void MSBoard::updateButtons ()
@@ -285,6 +291,7 @@ void MSBoard::gameWon ()
       (*msArray)[i] = MSButton::Flag;
   }
   updateButtons ();
+  gameIsOver = true;
 }
 
 void MSBoard::gameLost ()
@@ -303,4 +310,5 @@ void MSBoard::gameLost ()
       (*msArray)[i] = MSButton::X;
   }
   updateButtons ();
+  gameIsOver = true;
 }
