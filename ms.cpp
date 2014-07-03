@@ -73,7 +73,9 @@ void MS::newGameClicked ()
   remainingMines = 10;
   numMines->setText ("10");
   curTime = 0;
+  timer->stop();
   time->setText ("0");
+
 }
 
 void MS::gameOver (MSBoard::State s)
