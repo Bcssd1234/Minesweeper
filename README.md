@@ -3,4 +3,6 @@ Minesweeper
 
 Minesweeper Game
 
-It sometimes doesn't recognize that a game has been won.
+
+Bugs:
+- It rarely doesn't recognize that a game has been won.
